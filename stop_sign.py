@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 import glob
 import os
 
@@ -12,7 +11,7 @@ RED_HIGH2 = (180, 255, 255)
 
 # Ensure output directory exists
 output_dir = "outputs"
-os.makedirs(output_dir, exist_ok=True) # Creates a output directory if file doesn't exist
+os.makedirs(output_dir, exist_ok=True) # Creates an output directory if file doesn't exist
 
 # Load dataset images
 image_paths = glob.glob("stop_sign_dataset/*.jpg")
@@ -36,6 +35,8 @@ for i, path in enumerate(image_paths):
     mask1 = cv2.inRange(hsv, RED_LOW1, RED_HIGH1)
     mask2 = cv2.inRange(hsv, RED_LOW2, RED_HIGH2)
     red_mask = cv2.bitwise_or(mask1, mask2)
+
+    # Applying blur
     red_mask = cv2.GaussianBlur(red_mask, (5, 5), 0)
 
     # Find contours
@@ -53,12 +54,12 @@ for i, path in enumerate(image_paths):
         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 3)
         cv2.circle(image, (cx, cy), 7, (0, 0, 0), -1)
 
-        print(f"{path} → Center: ({cx}, {cy})")
+        print(f"{path}. Center: ({cx}, {cy})")
     else:
-        print(f"{path} → No stop sign detected")
+        print(f"{path}. No stop sign detected")
 
     # Save output
     output_path = os.path.join(output_dir, f"result_{i}.jpg")
     cv2.imwrite(output_path, image)
 
-print("Processing complete. Results saved in outputs folder.")
+print("Processing completed, results saved in /outputs ")
